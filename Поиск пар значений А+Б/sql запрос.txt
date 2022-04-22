@@ -1,0 +1,18 @@
+"with
+s3_t as (
+select  date(s1) as date_s1, 
+	id(s1) as id_s1, 
+	min(date(s2)) as min_date_s2
+from 	
+	s1 left join s2 on s1.id=s2.id and s1.date<=s2.date and s1.max_date>=s2.date
+group by date(s1), id(s1)
+	)
+
+select max(date_s1) as "Дата обращения", id_s1 as "ИНН"
+from s3_t
+where min_date_s2 is not null 
+group by min_date_s2, id_s1
+
+######################################
+s1 и s2 загруженные таблицы с данными.
+s1 (обращения) – события А и s2 (консультации) – события В.
